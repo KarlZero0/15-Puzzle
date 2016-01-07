@@ -7,12 +7,12 @@ namespace _15_Puzzle
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class GameLoop : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game1()
+        public GameLoop()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -27,6 +27,10 @@ namespace _15_Puzzle
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            graphics.PreferredBackBufferWidth = 800;// GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = 600;// GraphicsDevice.DisplayMode.Height;
+            graphics.IsFullScreen = false;
+            graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -73,7 +77,7 @@ namespace _15_Puzzle
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.DarkRed);
 
             // TODO: Add your drawing code here
 
