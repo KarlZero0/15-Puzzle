@@ -11,11 +11,16 @@ namespace _15_Puzzle
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Board board;
+        Input input;
 
         public GameLoop()
         {
             graphics = new GraphicsDeviceManager(this);
+            input = new Input();
             Content.RootDirectory = "Content";
+            this.IsMouseVisible = true;
+            
         }
 
         /// <summary>
@@ -27,11 +32,11 @@ namespace _15_Puzzle
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
             graphics.PreferredBackBufferWidth = 800;// GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = 600;// GraphicsDevice.DisplayMode.Height;
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
-
             base.Initialize();
         }
 
@@ -45,6 +50,7 @@ namespace _15_Puzzle
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            board = new Board(Content);
         }
 
         /// <summary>
@@ -63,8 +69,8 @@ namespace _15_Puzzle
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            input.Update(this, board);
+            
 
             // TODO: Add your update logic here
 
@@ -80,6 +86,7 @@ namespace _15_Puzzle
             GraphicsDevice.Clear(Color.DarkRed);
 
             // TODO: Add your drawing code here
+            board.DrawBoard(spriteBatch);
 
             base.Draw(gameTime);
         }
