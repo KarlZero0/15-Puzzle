@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
+using System.Linq;
 
 namespace _15_Puzzle
 {
@@ -11,20 +11,78 @@ namespace _15_Puzzle
         private ContentManager content;
         private int numTiles = 16;
         private Sprite background;
-        //private string directory = "graphics/tile_";
-        Tile[] array;
+        Board self;
 
-        public Board(ContentManager Content)
+        private int width;
+        private int height;
+        private int x;
+        private int y;
+
+        Tile[] array;
+        Tile[] winPattern;
+
+        StartButton start;
+        CheckButton check;
+
+        public Board(ContentManager Content, int screenWidth, int screenHeight)
         {
             content = Content;
-            background = new Sprite("graphics/background", 0, 0, content);
+            self = this;
+
+            start = new StartButton("start", content);
+            check = new CheckButton("check", content);
+
+            background = new Sprite("graphics/background", content);
+            int bgx = screenWidth / 2 - background.W / 2;
+            int bgY = screenHeight / 2 - background.H / 2 - start.Sprite.H / 2;
+            background.SetPos(bgx, bgY);
+
+            width = background.W;
+            height = background.H;
+            x = background.X;
+            y = background.Y;
+
             array = new Tile[numTiles];
+            winPattern = new Tile[numTiles];
+            
             CreateBoard();
         }
 
+        public int Width
+        {
+            get
+            {
+                return width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return height;
+            }
+        }
+
+        public int X
+        {
+            get
+            {
+                return x;
+            }
+        }
+
+        public int Y
+        {
+            get
+            {
+                return y;
+            }
+        }
+
+
         public void CreateBoard()
         {
-            string directory = "graphics/tile_";
             int rowCounter = 0;
             int colCounter = 0;
 
@@ -33,7 +91,7 @@ namespace _15_Puzzle
                 if (i < array.Length - 1)
                 {
                     string tileNum = (i + 1).ToString();
-                    array[i] = new Tile(directory + tileNum, content);
+                    array[i] = new Tile( tileNum, content);
                     array[i].Num = i;
                     array[i].Col = colCounter;
                     array[i].Row = rowCounter;
@@ -49,13 +107,17 @@ namespace _15_Puzzle
                         rowCounter++;
                     }
 
-                    array[i].SetPos();
+                    array[i].SetPos(self);
                 }
                 else
                 {
                     array[i] = null;
                 }
             }
+            Array.Copy(array, winPattern, numTiles);
+
+            start.SetPos(this, "left");
+            check.SetPos(this, "right");
         }
 
         public void DrawBoard(SpriteBatch spriteBatch)
@@ -66,25 +128,39 @@ namespace _15_Puzzle
             {
                 if (array[i] != null)
                 {
-                    Sprite sprite = array[i].Sprite;
-                    spriteBatch.Draw(sprite.Img, new Rectangle(sprite.X, sprite.Y, sprite.W, sprite.H), Color.White);
+                    Sprite spr = array[i].Sprite;
+                    spriteBatch.Draw(spr.Img, new Rectangle(spr.X, spr.Y, spr.W, spr.H), Color.White);
                 }
             }
+            Sprite sprite = start.Sprite; 
+            spriteBatch.Draw(sprite.Img, new Rectangle(sprite.X, sprite.Y, sprite.W, sprite.H), Color.White);
+            sprite = check.Sprite;
+            spriteBatch.Draw(sprite.Img, new Rectangle(sprite.X, sprite.Y, sprite.W, sprite.H), Color.White);
             spriteBatch.End();
         }
 
-        public void GetPositions()
+        public bool ButtonClick (int x, int y, GameLoop game)
         {
-            Tile[] tempArray = array;
-            for (int i = 0; i < array.Length; i++)
+            int height = start.Sprite.H;
+            int width = start.Sprite.W;
+            int startX = X;
+            int startY = Y + Height;
+            int endX = X + Width;
+
+            if (x >= startX && x <= startX + width && y >= startY && y <= startY + height)
             {
-                int indexPos = (array[i].Row * 4) + array[i].Col - 1;
-                tempArray[indexPos] = array[i];
+                start.Click(game);
+                return true;
             }
-            array = tempArray;
+            else if (x <= endX && x >= endX - width && y >= startY && y <= startY + height)
+            {
+                check.Click(self);
+                return true;
+            }
+            return false;
         }
 
-        public void Click(int x, int y)
+        public void TileClick(int x, int y)
         {
             Tile shorthand;
             if (array[0] != null)
@@ -95,24 +171,26 @@ namespace _15_Puzzle
             {
                 shorthand = array[1];
             }
+
             int height = shorthand.Sprite.H;
             int width = shorthand.Sprite.W;
             int row;
             int col;
+            int startX = X;
+            int startY = Y;
 
             for (int i = 0; i < 4; i++)
             {
-                if (i * height <= y && i * height + height >= y)
+                if (startY + i * height <= y && startY + i * height + height >= y)
                 {
                     row = i;
                     for (int j = 0; j < 4; j++)
                     {
-                        if (j * width <= x && j * width + width >= x)
+                        if (startX + j * width <= x && startX + j * width + width >= x)
                         {
                             col = j;
                             int indexPos = (row * 4) + col;
                             CheckMove(indexPos, row, col);
-                            //MoveTile(indexPos, row, col);
                         }
                     }
                 }
@@ -168,7 +246,18 @@ namespace _15_Puzzle
             tempArray[movingToIndex].Col = col;
             tempArray[indexPos] = null;
             array = tempArray;
-            array[movingToIndex].SetPos();
+            array[movingToIndex].SetPos(self);
+        }
+
+        public bool CheckWin()
+        {
+            bool areEqual = array.SequenceEqual(winPattern);
+            if (areEqual)
+            {
+                Console.WriteLine("Win");
+                return true;
+            }
+            return false;
         }
     }
 }

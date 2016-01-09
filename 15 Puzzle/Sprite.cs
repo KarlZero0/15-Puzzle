@@ -62,7 +62,7 @@ namespace _15_Puzzle
             }
         }
 
-        public Sprite (string imageFile, int xPos, int yPos, ContentManager Content)
+        public Sprite(string imageFile, int xPos, int yPos, ContentManager Content)
         {
             img = Content.Load<Texture2D>(imageFile);
             x = xPos;
@@ -77,6 +77,13 @@ namespace _15_Puzzle
             w = img.Width;
             h = img.Height;
         }
+
+        public void SetPos(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+
 
     }
 }

@@ -13,6 +13,10 @@ namespace _15_Puzzle
         SpriteBatch spriteBatch;
         Board board;
         Input input;
+        bool gameStarted = false;
+
+        int screenWidth;
+        int screenHeight;
 
         public GameLoop()
         {
@@ -21,6 +25,18 @@ namespace _15_Puzzle
             Content.RootDirectory = "Content";
             this.IsMouseVisible = true;
             
+        }
+
+        public bool GameStarted
+        {
+            get
+            {
+                return gameStarted;
+            }
+            set
+            {
+                gameStarted = value;
+            }
         }
 
         /// <summary>
@@ -37,6 +53,8 @@ namespace _15_Puzzle
             graphics.PreferredBackBufferHeight = 600;// GraphicsDevice.DisplayMode.Height;
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
+            screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
             base.Initialize();
         }
 
@@ -50,7 +68,7 @@ namespace _15_Puzzle
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            board = new Board(Content);
+            board = new Board(Content, screenWidth, screenHeight);
         }
 
         /// <summary>

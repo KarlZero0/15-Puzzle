@@ -18,7 +18,10 @@ namespace _15_Puzzle
             {
                 int x = newState.X;
                 int y = newState.Y;
-                board.Click(x, y);
+                if (board.ButtonClick(x, y, game) == false)
+                {
+                    board.TileClick(x, y);
+                }
             }
 
             oldState = newState;
@@ -26,7 +29,7 @@ namespace _15_Puzzle
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                game.Exit();
-            }            
+            }
         }
     }
 }

@@ -7,20 +7,21 @@ namespace _15_Puzzle
 {
     class Tile
     {
-        protected Sprite sprite;
+        private Sprite sprite;
         private int num;
         private int row;
         private int col;
 
-        public Tile(string imageFile, ContentManager Content)
+        public Tile(string imageNumber, ContentManager Content)
         {
-            sprite = new Sprite(imageFile, Content);
+            string directory = "graphics/tile_";
+            sprite = new Sprite(directory + imageNumber, Content);
         }
 
-        public void SetPos()
+        public void SetPos(Board board)
         {
-            sprite.X = sprite.W * col;
-            sprite.Y = sprite.H * row; 
+            sprite.X = board.X + sprite.W * col;
+            sprite.Y = board.Y + sprite.H * row; 
         }
 
         public int Num
