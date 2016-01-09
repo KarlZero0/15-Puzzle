@@ -149,7 +149,7 @@ namespace _15_Puzzle
 
             if (x >= startX && x <= startX + width && y >= startY && y <= startY + height)
             {
-                start.Click(game);
+                start.Click(game, array, self);
                 return true;
             }
             else if (x <= endX && x >= endX - width && y >= startY && y <= startY + height)
