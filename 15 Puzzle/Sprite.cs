@@ -7,12 +7,14 @@ namespace _15_Puzzle
 {
     class Sprite
     {
+        //Declare variables
         private int x;
         private int y;
         private int w;
         private int h;
         private Texture2D img;
 
+        //Create get / set properties
         public int X
         {
             get
@@ -62,22 +64,27 @@ namespace _15_Puzzle
             }
         }
 
+        //Constructor if X and Y pos are already known
         public Sprite(string imageFile, int xPos, int yPos, ContentManager Content)
         {
+            //Assign variables
             img = Content.Load<Texture2D>(imageFile);
-            x = xPos;
-            y = yPos;
-            w = img.Width;
-            h = img.Height;
+            x   = xPos;
+            y   = yPos;
+            w   = img.Width;
+            h   = img.Height;
         }
 
+        //Constructor if coordinates aren't known
         public Sprite(string imageFile, ContentManager Content)
         {
+            //Assign variables
             img = Content.Load<Texture2D>(imageFile);
-            w = img.Width;
-            h = img.Height;
+            w   = img.Width;
+            h   = img.Height;
         }
 
+        //Sets x and y positions from parameters
         public void SetPos(int x, int y)
         {
             X = x;

@@ -2,28 +2,66 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace _15_Puzzle
 {
-    class Tile
+    class Tile : Sprite
     {
-        private Sprite sprite;
+        //Declares variables
         private int num;
         private int row;
         private int col;
 
-        public Tile(string imageNumber, ContentManager Content)
+        private float moveSpeed = 0;
+
+        //String prefix for all tile images
+        private static string directory = "graphics/tile_";
+
+        //Constructor taking in image name and adding it to the prefix before passing it to it's parent
+        public Tile(string imageNumber, ContentManager Content) : base(directory + imageNumber, Content)
         {
-            string directory = "graphics/tile_";
-            sprite = new Sprite(directory + imageNumber, Content);
+            
         }
 
+        //Set's the tile's position based on it's row and column relative to the board
         public void SetPos(Board board)
         {
-            sprite.X = board.X + sprite.W * col;
-            sprite.Y = board.Y + sprite.H * row; 
+            X = board.X + W * col;
+            Y = board.Y + H * row; 
         }
 
+        public void MovingPos(Tile toMove, Tile movingTo, Board board)
+        {
+            if (toMove.X < movingTo.X)
+            {
+                X += (int)toMove.moveSpeed;
+            }
+            else if (toMove.X > movingTo.X)
+            {
+                X -= (int)toMove.moveSpeed;
+            }
+            else if (toMove.Y < movingTo.Y)
+            {
+                Y += (int)toMove.moveSpeed;
+            }
+            else if (toMove.Y > movingTo.Y)
+            {
+                Y -= (int)toMove.moveSpeed;
+            }
+
+            if (Math.Abs(toMove.X - movingTo.X) <= 5 && Math.Abs(toMove.Y - movingTo.Y) <= 5)
+            {
+                X = movingTo.X;
+                Y = movingTo.Y;
+                board.TileMoving = false;
+            }
+
+            board.ToMove.X = X;
+            board.ToMove.Y = Y;
+        }
+
+        //Public properties
         public int Num
         {
             get
@@ -33,14 +71,6 @@ namespace _15_Puzzle
             set
             {
                 num = value;
-            }
-        }
-
-        public Sprite Sprite
-        {
-            get
-            {
-                return sprite;
             }
         }
 
@@ -65,6 +95,18 @@ namespace _15_Puzzle
             set
             {
                 col = value;
+            }
+        }
+
+        public float MoveSpeed
+        {
+            get
+            {
+                return moveSpeed;
+            }
+            set
+            {
+                moveSpeed = value;
             }
         }
     }

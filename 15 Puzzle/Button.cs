@@ -4,39 +4,34 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _15_Puzzle
 {
-    class Button
+    class Button : Sprite
     {
-        private Sprite sprite;
+        //String prefix for all button images
+        private static string directory = "graphics/button_";
 
-        public Button(string name, ContentManager Content)
+        //Constructor taking in the image name and adding the prefix to it before passing it to it's parent
+        public Button(string name, ContentManager Content) : base(directory + name, Content)
         {
-            string directory = "graphics/button_";
-            sprite = new Sprite(directory + name, Content);
+
         }
 
+        //Sets the button's X and Y positions to align to a part of the board
         public void SetPos(Board board, string alignment)
         {
             switch (alignment)
             {
                 case "left":
-                    sprite.X = board.X;
+                    X = board.X;
                     break;
                 case "right":
-                    sprite.X = board.X + board.Width - sprite.W;
+                    X = board.X + board.Width - W;
                     break;
                 case "middle":
-                    sprite.X = board.X + board.Width / 2 - sprite.W / 2;
+                    X = board.X + board.Width / 2 - W / 2;
                     break;
             }
-            sprite.Y = board.Y + board.Height;
-        }
 
-        public Sprite Sprite
-        {
-            get
-            {
-                return sprite;
-            }
+            Y         = board.Y + board.Height;
         }
     }
 }

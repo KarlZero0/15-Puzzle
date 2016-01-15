@@ -9,24 +9,30 @@ namespace _15_Puzzle
     /// </summary>
     public class GameLoop : Game
     {
+        //Declares starting variables
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Board board;
         Input input;
-        bool gameStarted = false;
+        bool gameStarted;
 
         int screenWidth;
         int screenHeight;
 
+        //Constructor for main game loop
         public GameLoop()
         {
-            graphics = new GraphicsDeviceManager(this);
-            input = new Input();
+            //Instantiates classes and sets variables
+            graphics              = new GraphicsDeviceManager(this);
+            input                 = new Input();
+            gameStarted           = false;
             Content.RootDirectory = "Content";
-            this.IsMouseVisible = true;
+            //Makes the mouse visible
+            this.IsMouseVisible   = true;
             
         }
 
+        //Creates property to check if the game is in progress
         public bool GameStarted
         {
             get
@@ -49,12 +55,16 @@ namespace _15_Puzzle
         {
             // TODO: Add your initialization logic here
 
-            graphics.PreferredBackBufferWidth = 800;// GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferHeight = 600;// GraphicsDevice.DisplayMode.Height;
-            graphics.IsFullScreen = false;
+            //Sets window size and fullscreen
+            graphics.PreferredBackBufferWidth  = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.IsFullScreen              = true;
             graphics.ApplyChanges();
-            screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
-            screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            
+            //Stores window size
+            screenHeight                       = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            screenWidth                        = GraphicsDevice.PresentationParameters.BackBufferWidth;
+
             base.Initialize();
         }
 
@@ -67,8 +77,8 @@ namespace _15_Puzzle
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
-            board = new Board(Content, screenWidth, screenHeight);
+            // Instantiates class using window size
+            board       = new Board(Content, spriteBatch, screenWidth, screenHeight);
         }
 
         /// <summary>
@@ -87,7 +97,15 @@ namespace _15_Puzzle
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            input.Update(this, board);
+            //Checks for device input every tick
+            if (board.TileMoving == true)
+            {
+                board.TileArray[board.ToMove.Num].MovingPos(board.ToMove, board.MovingTo, board);
+            }
+            else
+            {
+                input.Update(this, board);
+            }
             
 
             // TODO: Add your update logic here
@@ -103,8 +121,8 @@ namespace _15_Puzzle
         {
             GraphicsDevice.Clear(Color.DarkRed);
 
-            // TODO: Add your drawing code here
-            board.DrawBoard(spriteBatch);
+            //Draws the game board
+            board.DrawBoard();
 
             base.Draw(gameTime);
         }
