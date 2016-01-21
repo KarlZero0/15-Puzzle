@@ -10,14 +10,33 @@ namespace _15_Puzzle
     public class GameLoop : Game
     {
         //Declares starting variables
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        Board board;
-        Input input;
-        bool gameStarted;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private MainMenu mainMenu;
+        private Board board;
+        private Input input;
+        private Color PuzzleKingsYellow = new Color(254, 226, 47);
 
-        int screenWidth;
-        int screenHeight;
+        public enum EGameStates { mainmenu, ingame, options };
+        private EGameStates eGameState = EGameStates.mainmenu;
+
+        private bool gameStarted;
+
+        private int screenWidth;
+        private int screenHeight;
+
+        public EGameStates EGameState
+        {
+            get
+            {
+                return eGameState;
+            }
+            set
+            {
+                eGameState = value;
+            }
+        }
+
 
         //Constructor for main game loop
         public GameLoop()
@@ -77,6 +96,7 @@ namespace _15_Puzzle
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            mainMenu    = new MainMenu(Content, screenWidth, screenHeight);
             // Instantiates class using window size
             board       = new Board(Content, spriteBatch, screenWidth, screenHeight);
         }
@@ -97,15 +117,28 @@ namespace _15_Puzzle
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            //Checks for device input every tick
-            if (board.TileMoving == true)
+            switch (eGameState)
             {
-                board.TileArray[board.ToMove.Num].MovingPos(board.ToMove, board.MovingTo, board);
+                case EGameStates.mainmenu:
+                    input.Update(this, mainMenu);
+                    mainMenu.Update();
+                    break;
+                case EGameStates.ingame:
+                    //Checks for device input every tick
+                    if (board.TileMoving == true)
+                    {
+                        board.TileArray[board.ToMove.Num].MovingPos(board.ToMove, board.MovingTo, board);
+                    }
+                    else
+                    {
+                        input.Update(this, board);
+                    }
+                    break;
+                case EGameStates.options:
+                    input.Update(this, mainMenu);
+                    break;
             }
-            else
-            {
-                input.Update(this, board);
-            }
+            
             
 
             // TODO: Add your update logic here
@@ -119,10 +152,20 @@ namespace _15_Puzzle
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkRed);
+            GraphicsDevice.Clear(PuzzleKingsYellow);
 
-            //Draws the game board
-            board.DrawBoard();
+            switch (eGameState)
+            {
+                case EGameStates.mainmenu:
+                    mainMenu.Draw(spriteBatch);
+                    break;
+                case EGameStates.ingame:
+                    //Draws the game board
+                    board.DrawBoard();
+                    break;
+                case EGameStates.options:
+                    break;
+            }
 
             base.Draw(gameTime);
         }

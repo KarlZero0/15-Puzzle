@@ -42,9 +42,13 @@
     <Compile Include="Button.cs" />
     <Compile Include="CheckButton.cs" />
     <Compile Include="Input.cs" />
+    <Compile Include="MainMenu.cs" />
+    <Compile Include="mainmenu_OptionsButton.cs" />
+    <Compile Include="mainmenu_QuitButton.cs" />
+    <Compile Include="mainmenu_StartButton.cs" />
     <Compile Include="Shuffle.cs" />
     <Compile Include="Sprite.cs" />
-    <Compile Include="StartButton.cs" />
+    <Compile Include="ingame_StartButton.cs" />
     <Compile Include="Tile.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>

@@ -2,10 +2,10 @@
 
 namespace _15_Puzzle
 {
-    class StartButton : Button
+    class ingame_StartButton : Button
     {
         //Passes parameters up the chain
-        public StartButton(string name, ContentManager content) : base(name, content)
+        public ingame_StartButton(string name, ContentManager content) : base(name, content)
         {
 
         }

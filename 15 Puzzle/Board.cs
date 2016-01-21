@@ -28,8 +28,8 @@ namespace _15_Puzzle
         private Tile toMove;
         private Tile movingTo;
 
-        private StartButton start;
-        private CheckButton check;
+        private ingame_StartButton start;
+        //private CheckButton check;
 
         //Constructor taking in current screen size
         public Board(ContentManager Content, SpriteBatch sprBatch, int screenWidth, int screenHeight)
@@ -43,8 +43,8 @@ namespace _15_Puzzle
             self = this;
 
             //Creates buttons
-            start = new StartButton("start", content);
-            check = new CheckButton("check", content);
+            start = new ingame_StartButton("gameStart", content);
+            //check = new CheckButton("check", content);
 
             //Sets background image and centers the board based on the screen
             background = new Sprite("graphics/background", content);
@@ -188,8 +188,8 @@ namespace _15_Puzzle
             Array.Copy(array, winPattern, numTiles);
 
             //Set's the positions of the buttons relative to the board
-            start.SetPos(this, "left");
-            check.SetPos(this, "right");
+            start.SetPos(this, "middle");
+            //check.SetPos(this, "right");
         }
 
         //Draws the board
@@ -214,7 +214,7 @@ namespace _15_Puzzle
 
             //Draws the buttons
             spriteBatch.Draw(start.Img, new Rectangle(start.X, start.Y, start.W, start.H), Color.White);
-            spriteBatch.Draw(check.Img, new Rectangle(check.X, check.Y, check.W, check.H), Color.White);
+            //spriteBatch.Draw(check.Img, new Rectangle(check.X, check.Y, check.W, check.H), Color.White);
             spriteBatch.End();
         }
 
@@ -224,22 +224,14 @@ namespace _15_Puzzle
             //Takes sizes and positions of buttons
             int height = start.H;
             int width = start.W;
-            int startX = X;
-            int startY = Y + Height;
-            int endX = X + Width;
+            int startX = start.X;
+            int startY = start.Y;
 
             //If the click coordinates are within the start button
             if (x >= startX && x <= startX + width && y >= startY && y <= startY + height)
             {
                 //Call function and return bool
                 start.Click(game, array, self);
-                return true;
-            }
-            //If the click coordinates are within the check button
-            else if (x <= endX && x >= endX - width && y >= startY && y <= startY + height)
-            {
-                //Call function and return bool
-                check.Click(self);
                 return true;
             }
 
